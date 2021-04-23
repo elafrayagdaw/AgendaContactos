@@ -112,14 +112,4 @@ Relacion relacion;
 		resul = super.toString() + "Fecha nacimiento: " +  formatearFecha() + "\n" +"Relacion: " + relacion + "\n\n" + crearFirma()+"\n";
 		return resul;
 	}
-	
-	public int compareTo(Personal p1, Personal p2) {
-		if(p1.getFecha().isBefore(p2.getFecha())) {
-			return -1;
-		}
-		if(p1.getFecha().isAfter(p2.getFecha())) {
-			return 1;
-		}
-		return 0;
-	}
 }

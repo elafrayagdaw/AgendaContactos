@@ -6,17 +6,26 @@ import agenda.modelo.Profesional;
 import agenda.modelo.Relacion;
 
 /**
- * Utilidades para cargar la agenda  
+ * Utilidades para cargar la agenda 
  */
 public class AgendaIO {
 
+	/**
+	 * Método que al meter como @param una agenda, importa los datos predefinidos de esta.
+	 * 
+	 * */
     public static void importar(AgendaContactos agenda) {
         String[] tempo = obtenerLineasDatos();
         for(int i = 0; i < tempo.length; i++) {
             agenda.añadirContacto(parsearLinea(tempo[i]));
         }
     }
-
+    /**
+	 * Método que al meter como @param una linea con este estilo(tipo,nombre,apellidos,telefono,email,
+	 * empresa o fecha de nacimiento dependiendo del tipo de Contacto,relacion si la hay) te la convierte 
+	 * en un Contacto.
+	 * 
+	 * */
     private static Contacto parsearLinea(String linea) {
 
         String[] separacion = linea.split(",");
