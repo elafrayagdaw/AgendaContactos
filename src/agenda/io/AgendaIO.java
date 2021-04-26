@@ -59,29 +59,46 @@ public class AgendaIO {
 	 * Contacto.
 	 * 
 	 */
-	private static Contacto parsearLinea(String linea) {
-		int suma = 0;
-		int contador = 0;
+	private static Contacto parsearLinea(String linea){
+		String[] separacion = linea.split(",");
+		for(int i = 0; i < separacion.length; i++) {
+			separacion[i] = separacion[i].trim();
+		}
+		String nombre ; 
+		String apellidos; 
+		String telefono;
+		String email;
+		int numClase = Integer.parseInt(separacion[0]);
+		Relacion relac = Relacion.HIJO;
+		String atributoNoComun1;
+		
 		try {
-			String[] separacion = linea.split(",");
-			for (int i = 0; i < separacion.length; i++) {
-				separacion[i] = separacion[i].trim();
+			if(numClase == 1) {
+				nombre = separacion[1]; 
+				apellidos = separacion[2]; 
+				telefono = separacion[3];
+				email = separacion[4];;
+				atributoNoComun1 = separacion[5];
+				Profesional prof = new Profesional(nombre, apellidos, telefono, email, atributoNoComun1);
+				Contacto con = (Contacto) prof;
+				return con;
 			}
-
-			String nombre = separacion[1];
-			String apellidos = separacion[2];
-			String telefono = separacion[3];
-			String email = separacion[4];
-			String tempo1 = separacion[5];
-			int numero = Integer.parseInt(separacion[0]);
-			Relacion relac = Relacion.HIJO;
-
-			if (numero == 1) {
-				Profesional tempo = new Profesional(nombre, apellidos, telefono, email, tempo1);
-				Contacto c = (Contacto) tempo;
-				return c;
-			}
-			if (numero == 2) {
+		} catch (NullPointerException e) {
+			System.out.println("Hay campos nulos en el contacto");
+		} catch (NumberFormatException e) {
+			System.out.println("Error en el formato numérico de un campo del contacto");
+		} catch (Exception e) {
+			System.out.println("Error con un campo del contacto");
+		}
+		
+		try {
+			if(numClase == 2) {
+				nombre = separacion[1]; 
+				apellidos = separacion[2]; 
+				telefono = separacion[3];
+				email = separacion[4];;
+				atributoNoComun1 = separacion[5];
+				
 				separacion[6].toUpperCase();
 				switch (separacion[6].toUpperCase()) {
 				case "PADRE":
@@ -103,19 +120,19 @@ public class AgendaIO {
 					relac = relac.PAREJA;
 					break;
 				}
-				Contacto tempo = new Personal(nombre, apellidos, telefono, email, tempo1, relac);
-				Contacto c = (Contacto) tempo;
-				return c;
+				
+				Personal prof = new Personal(nombre, apellidos, telefono, email, atributoNoComun1, relac);
+				Contacto con = (Contacto) prof;
+				return con;
 			}
 		} catch (NullPointerException e) {
-			contador++;
-			suma += contador;
-			System.out.println("Campo vacío");
+			System.out.println("Hay campos nulos en el contacto");
+		} catch (NumberFormatException e) {
+			System.out.println("Error en el formato numérico de un campo del contacto");
 		} catch (Exception e) {
-			contador++;
-			suma += contador;
-			System.out.println("Error en el formato");
+			System.out.println("Error con un campo del contacto");
 		}
+		
 		return null;
 	}
 
