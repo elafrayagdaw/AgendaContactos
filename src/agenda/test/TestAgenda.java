@@ -1,12 +1,13 @@
 package agenda.test;
+
 import java.time.LocalDate;
 import java.util.Map;
 
-import agenda.io.AgendaIO;
 import agenda.modelo.AgendaContactos;
 import agenda.modelo.Contacto;
 import agenda.modelo.Personal;
 import agenda.modelo.Relacion;
+import agenda.io.AgendaIO;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class TestAgenda {
 
 	public static void main(String[] args) {
 		AgendaContactos agenda = new AgendaContactos();
-		AgendaIO.importar(agenda);
+		AgendaIO.importar(agenda, "agenda.csv");
 		System.out.println(agenda);
 		separador();
 
@@ -27,12 +28,12 @@ public class TestAgenda {
 		felicitar(agenda);
 		separador();
 
-		/*personalesOrdenadosPorFecha(agenda, 'm');
-		separador();*/
+		personalesOrdenadosPorFecha(agenda, 'm');
+		separador();
 		personalesOrdenadosPorFecha(agenda, 'e');
 		separador();
 		personalesOrdenadosPorFecha(agenda, 'w');
-		separador(); 
+		separador();
 
 		personalesPorRelacion(agenda);
 		separador();
@@ -88,3 +89,4 @@ public class TestAgenda {
 	}
 
 }
+
