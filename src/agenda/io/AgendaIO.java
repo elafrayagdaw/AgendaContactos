@@ -1,4 +1,5 @@
 package agenda.io;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,23 +28,22 @@ public class AgendaIO {
 			String linea = entrada.readLine();
 			while (linea != null) {
 				agenda.añadirContacto(parsearLinea(linea));
-				suma += contador;
 				linea = entrada.readLine();
 			}
 		} catch (IOException e) {
-			suma++;
+			suma += 1;
 			System.out.println("Error al leer " + ruta);
 		} catch (NullPointerException e) {
-			System.out.println("Documento vacío");
+			System.out.println("Campo es " + e.getMessage());
 		} finally {
 			if (entrada != null) {
 				try {
 					entrada.close();
 				} catch (NullPointerException e) {
-					suma++;
+					suma += 1;
 					System.out.println(e.getMessage());
 				} catch (IOException e) {
-					suma++;
+					suma += 1;
 					System.out.println(e.getMessage());
 				}
 			}
@@ -59,29 +59,32 @@ public class AgendaIO {
 	 * Contacto.
 	 * 
 	 */
-	private static Contacto parsearLinea(String linea){
+	private static Contacto parsearLinea(String linea) {
+		Contacto con = null;
+		Profesional prof;
+		Personal per;
+
 		String[] separacion = linea.split(",");
-		for(int i = 0; i < separacion.length; i++) {
+		for (int i = 0; i < separacion.length; i++) {
 			separacion[i] = separacion[i].trim();
 		}
-		String nombre ; 
-		String apellidos; 
+		String nombre;
+		String apellidos;
 		String telefono;
 		String email;
 		int numClase = Integer.parseInt(separacion[0]);
 		Relacion relac = Relacion.HIJO;
 		String atributoNoComun1;
-		
+
 		try {
-			if(numClase == 1) {
-				nombre = separacion[1]; 
-				apellidos = separacion[2]; 
+			if (numClase == 1) {
+				nombre = separacion[1];
+				apellidos = separacion[2];
 				telefono = separacion[3];
-				email = separacion[4];;
+				email = separacion[4];
 				atributoNoComun1 = separacion[5];
-				Profesional prof = new Profesional(nombre, apellidos, telefono, email, atributoNoComun1);
-				Contacto con = (Contacto) prof;
-				return con;
+				prof = new Profesional(nombre, apellidos, telefono, email, atributoNoComun1);
+				con = (Contacto) prof;
 			}
 		} catch (NullPointerException e) {
 			System.out.println("Hay campos nulos en el contacto");
@@ -89,16 +92,16 @@ public class AgendaIO {
 			System.out.println("Error en el formato numérico de un campo del contacto");
 		} catch (Exception e) {
 			System.out.println("Error con un campo del contacto");
-		}
-		
+		} 
+
 		try {
-			if(numClase == 2) {
-				nombre = separacion[1]; 
-				apellidos = separacion[2]; 
+			if (numClase == 2) {
+				nombre = separacion[1];
+				apellidos = separacion[2];
 				telefono = separacion[3];
-				email = separacion[4];;
+				email = separacion[4];
 				atributoNoComun1 = separacion[5];
-				
+
 				separacion[6].toUpperCase();
 				switch (separacion[6].toUpperCase()) {
 				case "PADRE":
@@ -120,10 +123,9 @@ public class AgendaIO {
 					relac = relac.PAREJA;
 					break;
 				}
-				
-				Personal prof = new Personal(nombre, apellidos, telefono, email, atributoNoComun1, relac);
-				Contacto con = (Contacto) prof;
-				return con;
+
+				per = new Personal(nombre, apellidos, telefono, email, atributoNoComun1, relac);
+				con = (Contacto) per;
 			}
 		} catch (NullPointerException e) {
 			System.out.println("Hay campos nulos en el contacto");
@@ -131,9 +133,7 @@ public class AgendaIO {
 			System.out.println("Error en el formato numérico de un campo del contacto");
 		} catch (Exception e) {
 			System.out.println("Error con un campo del contacto");
-		}
-		
-		return null;
+		} 
+		return con;
 	}
-
 }
