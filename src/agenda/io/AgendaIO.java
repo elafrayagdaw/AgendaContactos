@@ -41,7 +41,7 @@ public class AgendaIO {
 		} catch (NullPointerException e) {
 			System.out.println("Documento vacío");
 		} finally {
-			if (entrada != null) {
+			if (entrada != null) { 
 				try {
 					entrada.close();
 				} catch (NullPointerException e) {
