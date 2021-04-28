@@ -37,7 +37,7 @@ public class TestAgenda {
 
 		personalesPorRelacion(agenda);
 		separador();
-
+		AgendaIO.exportarPersonales(agenda,"prueba.txt");
 	}
 
 	private static void buscarContactos(AgendaContactos agenda, String texto) {

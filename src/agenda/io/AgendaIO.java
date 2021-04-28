@@ -1,6 +1,8 @@
 package agenda.io;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import agenda.modelo.AgendaContactos;
@@ -140,6 +142,30 @@ public class AgendaIO {
 		
 		return null;
 	}
-
+	public static void exportarPersonales(AgendaContactos agenda, String ruta) {
+		FileWriter salida = null;
+		String print = "";
+		
+		try {
+			salida = new FileWriter(new File(ruta));
+			for(Relacion clave : agenda.personalesPorRelacion().keySet()) {
+					print += clave + "\n" + "-> ";
+				for(String nombre : agenda.personalesPorRelacion().get(clave)) {
+					print += nombre + ", ";
+				}
+				print += "<-\n";
+			}
+			salida.write(print);
+		} catch (IOException e) {
+			e.printStackTrace(System.err);
+		} finally {
+			try {
+				salida.close();
+			} catch (IOException e) {
+				System.out.println("No se puede cerrar");
+			}
+		}
+		 
+	}
 }
 
