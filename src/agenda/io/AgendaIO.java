@@ -11,13 +11,14 @@ import agenda.modelo.Personal;
 import agenda.modelo.Profesional;
 import agenda.modelo.Relacion;
 
-/**
+/**@author Unai Pérez, Enrique Lafraya, Iñaki Tiraplegui
  * Utilidades para cargar la agenda
  */
 public class AgendaIO {
 	/**
 	 * Método que al meter como @param una agenda, importa los datos predefinidos de
-	 * esta.
+	 * esta. A su vez, introducimos la ruta del archivo txt que deseamos importar para coger sus datos.
+	 * @return Devuelve un número entero con la cantidad de fallos originados a la hora de importar "X" líneas de datos
 	 * 
 	 */
 	public static int importar(AgendaContactos agenda, String ruta) {
@@ -38,7 +39,8 @@ public class AgendaIO {
 				linea = entrada.readLine();
 			}
 		} catch (IOException e) {
-			suma++;
+			contador++;
+			suma += contador;
 			System.out.println("Error al leer " + ruta);
 		} catch (NullPointerException e) {
 			System.out.println("Documento vacío");
@@ -47,15 +49,17 @@ public class AgendaIO {
 				try {
 					entrada.close();
 				} catch (NullPointerException e) {
-					suma++;
+					contador++;
+					suma += contador;
 					System.out.println(e.getMessage());
 				} catch (IOException e) {
-					suma++;
+					contador++;
+					suma += contador;
 					System.out.println(e.getMessage());
 				} 
 			}
 		}
-		System.out.println(suma);
+		System.out.println(); //System out decorativo a la hora de sacar los datos en la consola.
 		return suma;
 	}
 
@@ -63,7 +67,8 @@ public class AgendaIO {
 	 * Método que al meter como @param una linea con este
 	 * estilo(tipo,nombre,apellidos,telefono,email, empresa o fecha de nacimiento
 	 * dependiendo del tipo de Contacto,relacion si la hay) te la convierte en un
-	 * Contacto.
+	 * Contacto, por tanto, como @return devolverá un Contacto creado mediante la información
+	 * obtenido parseando la línea del parámetro.
 	 * 
 	 */
 	private static Contacto parsearLinea(String linea){
@@ -79,7 +84,7 @@ public class AgendaIO {
 		Relacion relac = Relacion.HIJO;
 		String atributoNoComun1;
 		
-		try {
+		try { //Creación de un contacto Profesional
 			if(numClase == 1) {
 				nombre = separacion[1]; 
 				apellidos = separacion[2]; 
@@ -90,15 +95,11 @@ public class AgendaIO {
 				Contacto con = (Contacto) prof;
 				return con;
 			}
-		} catch (NullPointerException e) {
-			System.out.println("Hay campos nulos en el contacto");
-		} catch (NumberFormatException e) {
-			System.out.println("Error en el formato numérico de un campo del contacto");
 		} catch (Exception e) {
 			System.out.println("Error con un campo del contacto");
 		}
 		
-		try {
+		try { //Creación de un contacto Personal
 			if(numClase == 2) {
 				nombre = separacion[1]; 
 				apellidos = separacion[2]; 
@@ -132,40 +133,56 @@ public class AgendaIO {
 				Contacto con = (Contacto) prof;
 				return con;
 			}
-		} catch (NullPointerException e) {
-			System.out.println("Hay campos nulos en el contacto");
-		} catch (NumberFormatException e) {
-			System.out.println("Error en el formato numérico de un campo del contacto");
 		} catch (Exception e) {
 			System.out.println("Error con un campo del contacto");
 		}
 		
 		return null;
 	}
+	
+	/**
+	 * Método que exportará los contactos PERSONALES clasificados por tipo de relación en un archivo cuyo nombre
+	 * será el introducido como parámetro.
+	 * @param Introducimos como parámetros una ruta del archivo a crear con los contactos escritos en él. A su 
+	 * vez, introducimos una agenda para obtener mediante ella, todos los contactos personales y clasificarlos
+	 * por relación.
+	 * 
+	 */
 	public static void exportarPersonales(AgendaContactos agenda, String ruta) {
 		FileWriter salida = null;
-		String print = "";
-		
-		try {
-			salida = new FileWriter(new File(ruta));
-			for(Relacion clave : agenda.personalesPorRelacion().keySet()) {
-					print += clave + "\n" + "-> ";
-				for(String nombre : agenda.personalesPorRelacion().get(clave)) {
-					print += nombre + ", ";
-				}
-				print += "<-\n";
-			}
-			salida.write(print);
-		} catch (IOException e) {
-			e.printStackTrace(System.err);
-		} finally {
-			try {
-				salida.close();
-			} catch (IOException e) {
-				System.out.println("No se puede cerrar");
-			}
-		}
-		 
-	}
+        StringBuilder print = new StringBuilder();
+        String dato = "";
+
+        try {
+            boolean acabado = true;
+            salida = new FileWriter(new File(ruta));
+            for(Relacion clave : agenda.personalesPorRelacion().keySet()) {
+                    print.append(clave + "\n" + "-> ");
+                    acabado = false;
+                    dato = "" + print;
+                for(String nombre : agenda.personalesPorRelacion().get(clave)) {
+                    if(acabado == false) {
+                        print.append(nombre);
+                        dato = "" + print;
+                        acabado = true;
+                        }else {
+                            print.append("," + nombre);
+                            dato = "" + print;
+                        }
+            }
+                print.append("\n");
+                dato="" + print;}
+            salida.write(dato);
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        } finally {
+            try {
+                salida.close();
+            } catch (IOException e) {
+                System.out.println("No se puede cerrar");
+            }
+        }
+
+    }
 }
 
